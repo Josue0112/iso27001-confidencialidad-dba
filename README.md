@@ -73,39 +73,4 @@ Revisar la sección 9 del informe. Si alguna prueba falló, agregarla como halla
 3. Insertar las capturas más importantes en el informe (al menos una por control).
 4. Exportar el documento a PDF y guardarlo en `/informe`.
 
-### 6. Repositorio
 
-```
-git add .
-git commit -m "Entrega controles ISO 27001 confidencialidad DBA"
-git push
-```
-
-Hacer commits por etapa (scripts, evidencias, informe) para que el historial muestre el avance.
-
-### 7. Video de 5 minutos
-
-Guion sugerido:
-
-| Minuto | Contenido |
-| --- | --- |
-| 0:00-0:45 | Objetivo, entorno (Oracle 21c XE, esquema RRHH ficticio) y ciclo PHVA |
-| 0:45-1:30 | Riesgos R-CONF-01 a 05 y por qué tres son altos |
-| 1:30-3:30 | Demostración en vivo: PR-01 y PR-02 (APP_VENTAS ve solo VENTAS con datos ocultos), PR-03 (JEFE_RRHH ve todo), PR-06 y PR-10 (el DBA no ve datos ni puede apagar la auditoría), PR-09 (el auditor ve los accesos) |
-| 3:30-4:15 | Evidencias: E11 (tablespace cifrado), E20 (respaldo cifrado), E16 (red cifrada) |
-| 4:15-5:00 | Matriz de evaluación, hallazgos y plan de mejora |
-
-## Volver a empezar desde cero
-
-`98_reiniciar_laboratorio.sql` borra usuarios, roles, perfil, políticas y tablespaces del laboratorio y deja XEPDB1 como antes del 00. Se puede correr aunque la instalación haya quedado a medias.
-
-```
-sqlplus / as sysdba
-@98_reiniciar_laboratorio.sql
-```
-
-El keystore TDE, el modo ARCHIVELOG y el `sqlnet.ora` se mantienen. Por eso, al reinstalar, en lugar del 03 se usa `03b_tde_solo_tablespace.sql`:
-
-```
-00, 01, 02, 03b, 04, 05, 07, 08, 06 (RMAN), 10, 99
-```
