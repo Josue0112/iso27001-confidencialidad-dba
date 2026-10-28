@@ -1,0 +1,35 @@
+# =====================================================================
+# 09_sqlnet_ora.txt
+# Controles: A8.20 Seguridad de redes, A8.5 Autenticación segura.
+#
+# Agregar estas líneas al sqlnet.ora que lee el servidor. En Oracle 21c XE
+# para Windows NO es el de dbhomeXE: la carpeta se obtiene con el comando
+#   orabasehome
+# y el archivo es <resultado>\network\admin\sqlnet.ora
+# (en este equipo: C:\app\josgu\product\21c\homes\OraDB21Home1\network\admin\sqlnet.ora)
+#
+# Abrir el Bloc de notas como administrador para poder guardarlo.
+# Hacer una copia del sqlnet.ora original antes de editarlo.
+# Mantener las líneas que ya trae el archivo (SQLNET.AUTHENTICATION_SERVICES
+# y NAMES.DIRECTORY_PATH): la de NTS permite entrar con "sqlplus / as sysdba".
+# =====================================================================
+
+# Cifrado obligatorio de todo el tráfico Oracle Net
+SQLNET.ENCRYPTION_SERVER = REQUIRED
+SQLNET.ENCRYPTION_TYPES_SERVER = (AES256)
+
+# Verificación de integridad de los paquetes
+SQLNET.CRYPTO_CHECKSUM_SERVER = REQUIRED
+SQLNET.CRYPTO_CHECKSUM_TYPES_SERVER = (SHA256)
+
+# Solo verificadores de contraseña modernos (12C)
+SQLNET.ALLOWED_LOGON_VERSION_SERVER = 12a
+
+# Solo se aceptan conexiones desde este equipo (::1 es localhost en IPv6).
+TCP.VALIDNODE_CHECKING = YES
+TCP.INVITED_NODES = (127.0.0.1, ::1, localhost, Josue-pc)
+
+# Después de guardar, reiniciar el listener (cmd como administrador):
+#   lsnrctl stop
+#   lsnrctl start
+# y volver a conectarse desde SQL Developer para probar (prueba PR-13).

@@ -1,0 +1,32 @@
+# =====================================================================
+# 06_respaldo_cifrado.rman
+# Control: A8.13 Respaldo de la información (respaldos cifrados).
+#
+# PASO PREVIO (SQL*Plus como SYS AS SYSDBA): RMAN necesita la base en
+# ARCHIVELOG para respaldarla abierta. Revisar con:
+#   SELECT log_mode FROM v$database;
+# Si dice NOARCHIVELOG, ejecutar en SQL*Plus (conectado al CDB, no a XEPDB1;
+# SHOW CON_NAME debe decir CDB$ROOT):
+#   ALTER SESSION SET CONTAINER = CDB$ROOT;
+#   SHUTDOWN IMMEDIATE
+#   STARTUP MOUNT
+#   ALTER DATABASE ARCHIVELOG;
+#   ALTER DATABASE OPEN;
+#   ALTER PLUGGABLE DATABASE ALL OPEN;
+#
+# El keystore TDE debe estar abierto (con el auto-login del script 03
+# se abre solo). Revisar:  SELECT status FROM v$encryption_wallet;
+#
+# Ejecutar este archivo desde la línea de comandos:
+#   rman target / @06_respaldo_cifrado.rman
+# =====================================================================
+
+CONFIGURE ENCRYPTION FOR DATABASE ON;
+CONFIGURE ENCRYPTION ALGORITHM 'AES256';
+
+SHOW ENCRYPTION FOR DATABASE;
+SHOW ENCRYPTION ALGORITHM;
+
+BACKUP DATABASE PLUS ARCHIVELOG TAG 'RESPALDO_CIFRADO_LAB';
+
+LIST BACKUP SUMMARY;
